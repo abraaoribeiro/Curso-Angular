@@ -1,0 +1,23 @@
+<nav *ngIf="mostrarMenu">
+    <div class="nav-wrapper" >
+        <a href="#" class="brand-logo right">Rotas Angular</a>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+            <li><a [routerLink]="['/']">Home</a></li>
+            <li routerLinkActive="active"><a [routerLink]="['/login']">Login</a></li>
+            <li routerLinkActive="active"><a [routerLink]="['/cursos']" [queryParams]="{pagina:1}">Cursos</a></li>
+            <!--li routerLinkActive="active"><a [routerLink]="['/curso', idCurso.value]">Cursos Detalhes</a></li-->
+            <li routerLinkActive="active"><a routerLink="/alunos">Alunos</a></li>
+
+
+        </ul>
+    </div>
+</nav>
+
+
+<div class="container">
+    <!-- <p>Entre com id</p>
+    <input #idCurso >
+   -->
+    <router-outlet></router-outlet>
+
+</div>
