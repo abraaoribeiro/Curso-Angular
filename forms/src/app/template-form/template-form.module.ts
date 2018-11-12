@@ -1,12 +1,10 @@
-import { HttpClientModule } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
-import { FormDebugComponent } from '../form-debug/form-debug.component';
+import { SharedModule } from './../shared/shared.module';
 import { TemplateFormComponent } from './template-form.component';
-import { CampoComtrolErroComponent } from '../campo-comtrol-erro/campo-comtrol-erro.component';
-import { HttpModule } from '@angular/http';
 
 
 
@@ -15,13 +13,12 @@ import { HttpModule } from '@angular/http';
     CommonModule,
     FormsModule,
     HttpClientModule,
+    SharedModule
   ],
   exports: [],
   declarations: [
     TemplateFormComponent,
-    FormDebugComponent,
-    CampoComtrolErroComponent
   ],
-  providers:[]
+  providers: []
 })
 export class TemplateFormModule { }
