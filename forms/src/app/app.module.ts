@@ -1,4 +1,3 @@
-import { DataFormModule } from './data-form/data-form.module';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -9,7 +8,9 @@ import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
+import { DataFormModule } from './data-form/data-form.module';
 import { TemplateFormModule } from './template-form/template-form.module';
+import { DropdownService } from './shared/services/dropdown.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,7 @@ import { TemplateFormModule } from './template-form/template-form.module';
     ,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [],
+  providers: [DropdownService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
