@@ -11,26 +11,24 @@
       formControlName="nome">
       <app-campo-comtrol-erro 
       [mostrarErro]="verificaValidTouched('nome')" 
-      msgErro="Nome é obrigatorio">
+      msgErro="Nome é obrigatorio.">
       </app-campo-comtrol-erro>
     </div>
   </div>
 
   <div class="form-group" [ngClass]="aplicaCssErro('email')">
     <div class="col-sm-12">
-      <label for="email" 
-      class="control-label">Email</label>
+      <label for="email" class="control-label">Email</label>
     </div>
-    <div>
+
     <div class="col-sm-12">
       <input type="text" class="form-control" id="email" 
       placeholder="email@email.com" 
       formControlName="email">
       <app-campo-comtrol-erro 
-      [mostrarErro]="verificaEmailInvalido()" 
-      msgErro="Email obrigatorio">
+      [mostrarErro]="verificaValidTouched('email')" 
+      msgErro="Email é obrigatorio.">
       </app-campo-comtrol-erro>
-      </div>
     </div>
   </div>
 
@@ -109,6 +107,7 @@
       </div>
     </div>
   </div>
+  
   <button type="submit" class="btn btn-primary">Submit</button>
   <button class="btn" (click)="resetar()">Cancelar</button>
   <app-form-debug [form]="formulario"></app-form-debug>
