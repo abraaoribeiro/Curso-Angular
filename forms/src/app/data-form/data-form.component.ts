@@ -51,11 +51,12 @@ export class DataFormComponent implements OnInit {
       this.verificaValidacoesForm(this.formulario);
     }
   }
+
   verificaValidacoesForm(formGroup: FormGroup) {
     //retornando uma coleção
     Object.keys(formGroup.controls).forEach(campo => {
       console.log(campo);
-      const controle = this.formulario.get(campo);
+      const controle = formGroup.get(campo);
       controle.markAsDirty();
       if (controle instanceof FormGroup) {
         this.verificaValidacoesForm(controle);
