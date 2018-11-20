@@ -1,32 +1,40 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { ConsultaCepService } from "./../shared/services/consulta-cep.service";
+import { Component, OnInit } from "@angular/core";
+import { HttpClient } from "@angular/common/http";
+import { FormGroup, FormBuilder, Validators } from "@angular/forms";
 
-import { EstadoBr } from './../shared/model/estado-br';
-import { DropdownService } from '../shared/services/dropdown.service';
+import { EstadoBr } from "./../shared/models/estado-br";
+import { DropdownService } from "../shared/services/dropdown.service";
+import { Observable } from "rxjs";
 @Component({
-  selector: 'app-data-form',
-  templateUrl: './data-form.component.html',
-  styleUrls: ['./data-form.component.css']
+  selector: "app-data-form",
+  templateUrl: "./data-form.component.html",
+  styleUrls: ["./data-form.component.css"]
 })
 export class DataFormComponent implements OnInit {
   formulario: FormGroup;
-  estados: EstadoBr [];
+  //estados: EstadoBr[];
+  estados: Observable <EstadoBr[]>;
+  cargos:any[];
 
   constructor(
     private formBuilder: FormBuilder,
     private http: HttpClient,
-    private dropDownService: DropdownService
+    private dropDownService: DropdownService,
+    private cepService: ConsultaCepService
   ) {}
 
   ngOnInit() {
-  this.dropDownService.getEstadoBr().subscribe(dados => {
-  dados = this.estados; console.log(dados);
 
-  });
-
+    this.estados = this.dropDownService.getEstadoBr();
+    this.cargos = this.dropDownService.getCargos();
 
 
+   /*  this.dropDownService.getEstadoBr().subscribe(dados => {
+    this.estados = dados;
+      console.log(dados);
+    });
+ */
     /*   this.formulario = new FormGroup({
         nome: new FormControl(null),
         email: new FormControl(null)
@@ -47,19 +55,21 @@ export class DataFormComponent implements OnInit {
         bairro: [null, Validators.required],
         cidade: [null, Validators.required],
         estado: [null, Validators.required]
-      })
+      }),
+      cargo: null
+
     });
   }
   onSubmit() {
     if (this.formulario.valid) {
       this.http
-        .post('https://httpbin.org/post', JSON.stringify(this.formulario.value))
+        .post("https://httpbin.org/post", JSON.stringify(this.formulario.value))
         .subscribe(
           dados => {
             console.log(dados);
             this.formulario.reset();
           },
-          (erro: any) => alert('erro')
+          (erro: any) => alert("erro")
         );
     } else {
       this.verificaValidacoesForm(this.formulario);
@@ -89,39 +99,26 @@ export class DataFormComponent implements OnInit {
   }
 
   verificaEmailInvalido() {
-    const campoEmail = this.formulario.get('email');
+    const campoEmail = this.formulario.get("email");
     if (campoEmail.errors) {
-      return campoEmail.errors['email'] && campoEmail.touched;
+      return campoEmail.errors["email"] && campoEmail.touched;
     }
   }
 
   aplicaCssErro(campo: string) {
     return {
-      'has-error': this.verificaValidTouched(campo),
-      'has-feedback': this.verificaValidTouched(campo)
+      "has-error": this.verificaValidTouched(campo),
+      "has-feedback": this.verificaValidTouched(campo)
     };
   }
 
   consultaCEP() {
-    let cep = this.formulario.get('endereco.cep').value;
-    // Nova variável cep somente com dígitos.
-    console.log(cep);
 
-    // Nova variável cep somente com dígitos.
-    cep = cep.replace(/\D/g, '');
-
-    // Verifica se campo cep possui valor informado.
-    if (cep !== '') {
-      // Expressão regular para validar o CEP.
-      const validacep = /^[0-9]{8}$/;
-
-      // Valida o formato do CEP.
-      if (validacep.test(cep)) {
-        this.resetaDadosForm();
-        return this.http
-          .get(`//viacep.com.br/ws/${cep}/json`)
-          .subscribe(dados => this.popularDadosForm(dados));
-      }
+    let cep = this.formulario.get("endereco.cep").value;
+    if (cep != null && cep !== '') {
+      this.cepService
+        .consultaCEP(cep)
+        .subscribe(dados => this.popularDadosForm(dados));
     }
   }
 
@@ -129,7 +126,7 @@ export class DataFormComponent implements OnInit {
     this.formulario.patchValue({
       endereco: {
         // cep: dados.cep,
-        numero: '',
+        numero: "",
         complemento: dados.complemento,
         rua: dados.logradouro,
         bairro: dados.bairro,
