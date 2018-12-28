@@ -10,12 +10,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { DataFormModule } from './data-form/data-form.module';
 import { TemplateFormModule } from './template-form/template-form.module';
-import { DropdownService } from './shared/services/dropdown.service';
 
 @NgModule({
   declarations: [
     AppComponent,
-
   ],
   imports: [
     BrowserModule,
@@ -28,7 +26,7 @@ import { DropdownService } from './shared/services/dropdown.service';
     ,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
-  providers: [DropdownService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

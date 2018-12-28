@@ -5,7 +5,6 @@ import { FormGroup,
         Validators, 
         FormControl} from "@angular/forms";
 
-import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { VerificaEmailService } from './services/verifica-email.service';
@@ -13,6 +12,7 @@ import { ConsultaCepService } from "./../shared/services/consulta-cep.service";
 import { DropdownService } from "../shared/services/dropdown.service";
 import { FormValidation } from '../shared/form-validation';
 import { EstadoBr } from "./../shared/models/estado-br";
+import { Observable } from "rxjs";
 @Component({
   selector: "app-data-form",
   templateUrl: "./data-form.component.html",
@@ -20,8 +20,8 @@ import { EstadoBr } from "./../shared/models/estado-br";
 })
 export class DataFormComponent implements OnInit {
   formulario: FormGroup;
-  estados: EstadoBr[];
-  //estados: Observable<EstadoBr>[];
+  //estados: EstadoBr[];
+  estados: Observable<EstadoBr>;
   cargos: any[];
   tecnologias: any[];
   newsletterOp: any[];
@@ -57,7 +57,7 @@ export class DataFormComponent implements OnInit {
        }); */
 
     this.formulario = this.formBuilder.group({
-      nome: [null, Validators.required],
+      nome: [null, [Validators.required, Validators.minLength(3), Validators.maxLength(5)]],
       email: [null, [Validators.required, Validators.email], [this.validarEmail.bind(this)]],
       confirmarEmail: [null, [FormValidation.equalsTo('email')]],
 
@@ -92,7 +92,6 @@ export class DataFormComponent implements OnInit {
  
      ]) */
   }
-
 
   onSubmit() {
 
