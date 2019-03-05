@@ -1,11 +1,13 @@
 import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
-import { FormGroup,
-        FormBuilder, 
-        Validators, 
-        FormControl} from "@angular/forms";
+import {
+  FormGroup,
+  FormBuilder,
+  Validators,
+  FormControl
+} from "@angular/forms";
 
-import { map } from 'rxjs/operators';
+import { map, tap, distinctUntilChanged } from 'rxjs/operators';
 
 import { VerificaEmailService } from './services/verifica-email.service';
 import { ConsultaCepService } from "./../shared/services/consulta-cep.service";
@@ -77,6 +79,12 @@ export class DataFormComponent implements OnInit {
       frameworks: this.builFrameworks(),
 
     });
+
+    this.formulario.get('endereco.cep').statusChanges
+      .pipe(
+        distinctUntilChanged(),
+        tap(values => console.log('status CEP:', values)))
+      .subscribe();
   }
 
   builFrameworks() {
@@ -89,7 +97,7 @@ export class DataFormComponent implements OnInit {
        new FormControl(false), // SpringBoot
        new FormControl(false), // React
        new FormControl(false) // Vue
- 
+
      ]) */
   }
 
