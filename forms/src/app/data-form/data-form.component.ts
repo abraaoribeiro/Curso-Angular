@@ -1,20 +1,20 @@
-import { Component, OnInit } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { Component, OnInit } from "@angular/core";
 import {
-  FormGroup,
   FormBuilder,
   Validators,
   FormControl
 } from "@angular/forms";
+import { map, tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import {  empty } from "rxjs";
 
-import { map, tap, distinctUntilChanged } from 'rxjs/operators';
 
 import { VerificaEmailService } from './services/verifica-email.service';
 import { ConsultaCepService } from "./../shared/services/consulta-cep.service";
 import { DropdownService } from "../shared/services/dropdown.service";
 import { FormValidation } from '../shared/form-validation';
-import { EstadoBr } from "./../shared/models/estado-br";
-import { Observable } from "rxjs";
+import { Cidade } from './../shared/models/cidade';
+import { EstadoBr } from './../shared/models/estado-br';
 import { BaseFormComponent } from "../shared/base-form/base-form.component";
 @Component({
   selector: "app-data-form",
@@ -22,8 +22,9 @@ import { BaseFormComponent } from "../shared/base-form/base-form.component";
   styleUrls: ["./data-form.component.css"]
 })
 export class DataFormComponent extends BaseFormComponent implements OnInit {
-  //estados: EstadoBr[];
-  estados: Observable<any>;
+  estados: EstadoBr [];
+  cidades: Cidade [];
+  //estados: Observable<any>;
   cargos: any[];
   tecnologias: any[];
   newsletterOp: any[];
@@ -42,7 +43,8 @@ export class DataFormComponent extends BaseFormComponent implements OnInit {
   ngOnInit() {
 
     // this.verificaEmail.verificarEmail('email@email.com').subscribe();
-    this.estados = this.dropDownService.getEstadoBr();
+    //this.estados = this.dropDownService.getEstadoBr();
+    this.dropDownService.getEstadoBr().subscribe(dados => this.estados = dados);
     this.cargos = this.dropDownService.getCargos();
     this.tecnologias = this.dropDownService.getTecnologia();
     this.newsletterOp = this.dropDownService.getNewsletter();
@@ -85,8 +87,25 @@ export class DataFormComponent extends BaseFormComponent implements OnInit {
     this.formulario.get('endereco.cep').statusChanges
       .pipe(
         distinctUntilChanged(),
-        tap(values => console.log('status CEP:', values)))
-      .subscribe();
+        tap(value => console.log('status CEP:', value)),
+        switchMap(status => status === 'VALID' ?
+          this.cepService.consultaCEP(this.formulario.get('endereco.cep').value)
+          : empty()
+        )
+      )
+      .subscribe(dados => dados ? this.popularDadosForm(dados) : {});
+
+      //this.dropDownService.getCidades(8).subscribe(res => console.log(res))
+        this.formulario.get('endereco.estado').valueChanges
+        .pipe(
+          tap(estado => console.log('Novo estado: ', estado)),
+          map(estado => this.estados.filter(e => e.sigla === estado)),
+          map(estados => estados && estados.length > 0 ? estados[0].id : empty()),
+          switchMap((estadoId: number) => this.dropDownService.getCidades(estadoId)),
+          tap(console.log)
+
+        ).subscribe(cidades => this.cidades = cidades)
+
   }
 
   builFrameworks() {

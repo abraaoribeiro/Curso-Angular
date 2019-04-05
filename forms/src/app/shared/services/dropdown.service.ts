@@ -1,16 +1,22 @@
+import { Cidade } from './../models/cidade';
 import { Injectable } from "@angular/core";
 import { HttpClient } from "@angular/common/http";
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: "root"
 })
 export class DropdownService {
-  url = "assets/dados/estadobr.json";
-  constructor(private http: HttpClient) {}
+  urlEstado = "assets/dados/estadobr.json";
+  constructor(private http: HttpClient) { }
   getEstadoBr() {
-    return this.http.get(this.url);
+    return this.http.get(this.urlEstado);
   }
-
+  getCidades(idEstado: number) {
+    return this.http.get<Cidade[]>('assets/dados/cidades.json').pipe(
+      map((cidades:Cidade[])=> cidades.filter(c => c.estado == idEstado))
+    );
+  }
   getCargos() {
     return [
       { nome: "Dev", nivel: "Junior", desc: "Dev Jr" },
@@ -28,6 +34,8 @@ export class DropdownService {
   }
   getNewsletter() {
     return [{ valor: "s", desc: "Sim" },
-            { valor: "n", desc: "Não" }];
+    { valor: "n", desc: "Não" }];
   }
+
+
 }
