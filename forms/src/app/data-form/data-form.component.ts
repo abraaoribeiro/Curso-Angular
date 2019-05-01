@@ -1,30 +1,26 @@
 import { HttpClient } from "@angular/common/http";
 import { Component, OnInit } from "@angular/core";
-import {
-  FormBuilder,
-  Validators,
-  FormControl
-} from "@angular/forms";
+import {FormBuilder,Validators,FormControl} from "@angular/forms";
 import { map, tap, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import {  empty } from "rxjs";
+import {  empty, Observable } from "rxjs";
 
 
 import { VerificaEmailService } from './services/verifica-email.service';
 import { ConsultaCepService } from "./../shared/services/consulta-cep.service";
+import { BaseFormComponent } from "../shared/base-form/base-form.component";
 import { DropdownService } from "../shared/services/dropdown.service";
 import { FormValidation } from '../shared/form-validation';
-import { Cidade } from './../shared/models/cidade';
 import { EstadoBr } from './../shared/models/estado-br';
-import { BaseFormComponent } from "../shared/base-form/base-form.component";
+import { Cidade } from './../shared/models/cidade';
 @Component({
   selector: "app-data-form",
   templateUrl: "./data-form.component.html",
   styleUrls: ["./data-form.component.css"]
 })
 export class DataFormComponent extends BaseFormComponent implements OnInit {
-  estados: EstadoBr [];
+  //estados: EstadoBr [];
   cidades: Cidade [];
-  //estados: Observable<any>;
+  estados: any;
   cargos: any[];
   tecnologias: any[];
   newsletterOp: any[];
